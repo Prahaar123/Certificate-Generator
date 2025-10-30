@@ -1,6 +1,10 @@
 # Certificate Generator
 
-A modern, interactive certificate creator that allows users to customize text, fonts, and positions on templates, preview changes in real-time, and download high-quality PDFs. Built with **React**, **Vite**, and **TypeScript**.
+A modern, interactive web-based certificate creator that allows users to customize text, fonts, and positions on templates, preview changes in real-time, and download high-quality PDFs.
+Built with React, Vite, and TypeScript, this tool offers a seamless, responsive experience for creating professional certificates easily.
+
+
+🌐 **Live Demo:** [Certificate Generator](https://certificate-generator-nine-tau.vercel.app/)
 
 ---
 
@@ -17,15 +21,15 @@ A modern, interactive certificate creator that allows users to customize text, f
 
 ## Technology Stack
 
-This project is built with:
+This project is built using:
 
-- **Vite**  
-- **TypeScript**  
-- **React**  
-- **shadcn-ui**  
-- **Tailwind CSS**  
+- **Vite** – Fast build tool for modern web apps  
+- **TypeScript** – Strongly-typed JavaScript for reliability  
+- **React** – Component-based UI library  
+- **Tailwind CSS** – Utility-first styling  
+- **shadcn/ui** – Elegant and accessible UI components  
 
-> All shadcn/ui components have been downloaded under `@/components/ui`.
+All **shadcn/ui** components are locally available under `@/components/ui`.
 
 ---
 
@@ -82,6 +86,7 @@ This project is built with:
 - Customize font style, size, and color.
 - Preview in real-time.
 - Click Download to save as PDF.
+
 
 
 
