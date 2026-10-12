@@ -1,9 +1,9 @@
-import { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useMemo, useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { BadgeCheck, FileImage, FileSpreadsheet, Upload, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Upload, FileImage, FileSpreadsheet, X } from 'lucide-react';
 import { parseExcelFile, NameData } from '@/lib/excelParser';
 import { toast } from 'sonner';
 
@@ -14,61 +14,49 @@ interface FileUploaderProps {
   names: NameData[];
 }
 
-export default function FileUploader({ 
-  onTemplateUpload, 
-  onNamesUpload, 
-  templateImage, 
-  names 
+const panelClass =
+  'interactive-panel rounded-xl border border-white/10 bg-[#0a0d14]/92 shadow-[inset_0_1px_0_rgba(255,255,255,0.055)] backdrop-blur-xl';
+
+export default function FileUploader({
+  onTemplateUpload,
+  onNamesUpload,
+  templateImage,
+  names,
 }: FileUploaderProps) {
   const [isUploading, setIsUploading] = useState(false);
+
+  const sampleNames = useMemo(() => names.slice(0, 6), [names]);
 
   const handleTemplateUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
-    console.log('File selected:', file.name, file.type, file.size);
-
     if (!file.type.startsWith('image/')) {
-      toast.error('Please select a valid image file');
+      toast.error('Please select a JPG, PNG, or WebP image template.');
       return;
     }
 
     const reader = new FileReader();
     reader.onload = (e) => {
       const result = e.target?.result as string;
-      console.log('FileReader result length:', result?.length);
-      
       const img = new Image();
+
       img.onload = () => {
-        console.log('Image loaded successfully:', {
-          naturalWidth: img.naturalWidth,
-          naturalHeight: img.naturalHeight,
-          src: result.substring(0, 50) + '...'
-        });
-        
-        // Ensure we have valid dimensions
         if (img.naturalWidth > 0 && img.naturalHeight > 0) {
           onTemplateUpload(result, img.naturalWidth, img.naturalHeight);
-          toast.success('Certificate template uploaded successfully');
+          toast.success('Template loaded', {
+            description: `${img.naturalWidth} x ${img.naturalHeight}px`,
+          });
         } else {
-          console.error('Invalid image dimensions');
-          toast.error('Invalid image file - could not read dimensions');
+          toast.error('Could not read the template dimensions.');
         }
       };
-      
-      img.onerror = (error) => {
-        console.error('Image load error:', error);
-        toast.error('Failed to load image. Please try a different file.');
-      };
-      
+
+      img.onerror = () => toast.error('Failed to load this image. Try another template file.');
       img.src = result;
     };
-    
-    reader.onerror = (error) => {
-      console.error('FileReader error:', error);
-      toast.error('Failed to read the file.');
-    };
-    
+
+    reader.onerror = () => toast.error('Failed to read the template file.');
     reader.readAsDataURL(file);
   };
 
@@ -78,121 +66,163 @@ export default function FileUploader({
 
     setIsUploading(true);
     try {
-      const names = await parseExcelFile(file);
-      onNamesUpload(names);
-      toast.success(`Successfully loaded ${names.length} names from Excel file`);
+      const parsedNames = await parseExcelFile(file);
+      onNamesUpload(parsedNames);
+      toast.success(`${parsedNames.length} names loaded`, {
+        description: 'Duplicates and header rows were filtered automatically.',
+      });
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Failed to parse Excel file');
+      toast.error(error instanceof Error ? error.message : 'Failed to parse names file.');
     } finally {
       setIsUploading(false);
     }
   };
 
-  const clearTemplate = () => {
-    onTemplateUpload('', 0, 0);
-  };
-
-  const clearNames = () => {
-    onNamesUpload([]);
-  };
-
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <Card style={{ backgroundColor: '#1e2a3b' }} className="border-white/20">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-white">
-            <FileImage className="w-5 h-5" />
-            Certificate Template
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {templateImage ? (
-            <div className="space-y-3">
-              <div className="relative">
-                <img 
-                  src={templateImage} 
-                  alt="Certificate template" 
-                  className="w-full h-32 object-contain border rounded-lg bg-gray-50"
-                  onLoad={() => console.log('Thumbnail loaded successfully')}
-                  onError={() => console.error('Thumbnail failed to load')}
-                />
-                <Button
-                  variant="destructive"
-                  size="sm"
-                  className="absolute top-2 right-2"
-                  onClick={clearTemplate}
-                >
-                  <X className="w-4 h-4" />
-                </Button>
-              </div>
-              <p className="text-sm text-blue-100">Template uploaded successfully</p>
+    <div className="space-y-6">
+      <section className={panelClass}>
+        <div className="border-b border-white/10 p-5">
+          <div className="flex items-center gap-3">
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-white/[0.06]">
+              <FileImage className="h-4 w-4 text-[#9da7ff]" aria-hidden="true" />
             </div>
-          ) : (
-            <div className="space-y-3">
-              <Label htmlFor="template-upload" className="text-white">Upload Certificate Template</Label>
-              <div className="flex items-center gap-2">
-                <Input
-                  id="template-upload"
-                  type="file"
-                  accept="image/*"
-                  onChange={handleTemplateUpload}
-                  className="flex-1 bg-transparent border-white/30 text-white"
-                />
-                <Upload className="w-5 h-5 text-blue-100" />
-              </div>
-              <p className="text-sm text-blue-100">
-                Upload a high-quality image of your certificate template (JPG, PNG, etc.)
-              </p>
+            <div>
+              <h2 className="text-base font-semibold tracking-normal text-white">Template</h2>
+              <p className="text-sm text-[#8f96aa]">JPG, PNG, or WebP certificate artwork</p>
             </div>
-          )}
-        </CardContent>
-      </Card>
+          </div>
+        </div>
 
-      <Card style={{ backgroundColor: '#1e2a3b' }} className="border-white/20">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-white">
-            <FileSpreadsheet className="w-5 h-5" />
-            Names List
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
+        <div className="p-5">
+          <AnimatePresence mode="wait">
+            {templateImage ? (
+              <motion.div
+                key="template-loaded"
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                className="space-y-4"
+              >
+                <div className="relative overflow-hidden rounded-lg border border-white/10 bg-white">
+                  <img src={templateImage} alt="Certificate template" className="h-44 w-full object-contain" />
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    size="icon"
+                    className="absolute right-3 top-3 h-8 w-8"
+                    onClick={() => onTemplateUpload('', 0, 0)}
+                    aria-label="Remove template"
+                  >
+                    <X className="h-4 w-4" aria-hidden="true" />
+                  </Button>
+                </div>
+                <div className="flex items-center gap-2 text-sm text-[#cdd2e3]">
+                  <BadgeCheck className="h-4 w-4 text-[#6f7cff]" aria-hidden="true" />
+                  Template ready for positioning
+                </div>
+              </motion.div>
+            ) : (
+              <motion.div
+                key="template-empty"
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                className="space-y-3"
+              >
+                <Label htmlFor="template-upload" className="text-sm font-medium text-white">
+                  Upload template
+                </Label>
+                <label className="flex min-h-40 cursor-pointer flex-col items-center justify-center rounded-lg border border-dashed border-white/20 bg-white/[0.03] px-4 py-6 text-center transition hover:border-[#6f7cff]/60 hover:bg-[#6f7cff]/10">
+                  <Upload className="mb-3 h-6 w-6 text-[#9da7ff]" aria-hidden="true" />
+                  <span className="text-sm font-medium text-white">Choose certificate image</span>
+                  <span className="mt-1 text-xs text-[#8f96aa]">High resolution templates export best</span>
+                  <Input
+                    id="template-upload"
+                    type="file"
+                    accept="image/*"
+                    onChange={handleTemplateUpload}
+                    className="sr-only"
+                  />
+                </label>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      </section>
+
+      <section className={panelClass}>
+        <div className="border-b border-white/10 p-5">
+          <div className="flex items-center gap-3">
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-white/[0.06]">
+              <FileSpreadsheet className="h-4 w-4 text-[#9da7ff]" aria-hidden="true" />
+            </div>
+            <div>
+              <h2 className="text-base font-semibold tracking-normal text-white">Names</h2>
+              <p className="text-sm text-[#8f96aa]">Excel or CSV with a name column</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="p-5">
           {names.length > 0 ? (
-            <div className="space-y-3">
-              <div className="p-3 border rounded-lg border-white/30" style={{ backgroundColor: '#0f182a' }}>
-                <p className="font-medium text-white">{names.length} names loaded</p>
-                <div className="mt-2 max-h-24 overflow-y-auto">
-                  <p className="text-sm text-blue-100">
-                    {names.slice(0, 3).map(n => n.name).join(', ')}
-                    {names.length > 3 && ` and ${names.length - 3} more...`}
-                  </p>
+            <div className="space-y-4">
+              <div className="rounded-lg border border-white/10 bg-black/20 p-4">
+                <div className="flex items-center justify-between gap-3">
+                  <div>
+                    <p className="text-2xl font-semibold tracking-normal text-white">{names.length}</p>
+                    <p className="text-sm text-[#8f96aa]">recipients loaded</p>
+                  </div>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => onNamesUpload([])}
+                    className="border-white/15 bg-transparent text-white hover:bg-white/10 hover:text-white"
+                  >
+                    <X className="h-4 w-4" aria-hidden="true" />
+                    Clear
+                  </Button>
+                </div>
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {sampleNames.map((name) => (
+                    <span key={`${name.row}-${name.name}`} className="rounded-md bg-white/[0.06] px-2.5 py-1 text-xs text-[#cdd2e3]">
+                      {name.name}
+                    </span>
+                  ))}
+                  {names.length > sampleNames.length && (
+                    <span className="rounded-md bg-[#6f7cff]/15 px-2.5 py-1 text-xs text-[#dfe2ff]">
+                      +{names.length - sampleNames.length} more
+                    </span>
+                  )}
                 </div>
               </div>
-              <Button variant="outline" size="sm" onClick={clearNames} className="border-white/30 text-white hover:bg-white/10">
-                <X className="w-4 h-4 mr-2" />
-                Clear Names
-              </Button>
             </div>
           ) : (
             <div className="space-y-3">
-              <Label htmlFor="excel-upload" className="text-white">Upload Excel File</Label>
-              <div className="flex items-center gap-2">
+              <Label htmlFor="excel-upload" className="text-sm font-medium text-white">
+                Upload names
+              </Label>
+              <label className="flex cursor-pointer items-center gap-3 rounded-lg border border-dashed border-white/20 bg-white/[0.03] px-4 py-4 transition hover:border-[#6f7cff]/60 hover:bg-[#6f7cff]/10">
+                <Upload className="h-5 w-5 text-[#9da7ff]" aria-hidden="true" />
+                <span className="min-w-0 flex-1">
+                  <span className="block text-sm font-medium text-white">
+                    {isUploading ? 'Reading file...' : 'Choose .xlsx, .xls, or .csv'}
+                  </span>
+                  <span className="mt-1 block text-xs text-[#8f96aa]">Headers and duplicate names are cleaned up</span>
+                </span>
                 <Input
                   id="excel-upload"
                   type="file"
-                  accept=".xlsx,.xls"
+                  accept=".xlsx,.xls,.csv"
                   onChange={handleExcelUpload}
                   disabled={isUploading}
-                  className="flex-1 bg-transparent border-white/30 text-white"
+                  className="sr-only"
                 />
-                <Upload className="w-5 h-5 text-blue-100" />
-              </div>
-              <p className="text-sm text-blue-100">
-                Upload an Excel file with names in the first column
-              </p>
+              </label>
             </div>
           )}
-        </CardContent>
-      </Card>
+        </div>
+      </section>
     </div>
   );
 }

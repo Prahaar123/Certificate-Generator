@@ -1,4 +1,8 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Alegreya:wght@400;500;700;800&family=Alice&family=Allura&family=Amiri:wght@400;700&family=Arapey:ital@0;1&family=Archivo:wght@400;500;600;700;800&family=Bebas+Neue&family=Bitter:wght@400;500;700;800&family=Cardo:wght@400;700&family=Caveat:wght@400;500;600;700&family=Cinzel:wght@400;500;600;700;800&family=Cinzel+Decorative:wght@400;700;900&family=Cormorant:wght@400;500;600;700&family=Cormorant+Garamond:wght@400;500;600;700&family=Cormorant+SC:wght@400;500;600;700&family=Crimson+Pro:wght@400;500;600;700;800&family=Crimson+Text:wght@400;600;700&family=Dancing+Script:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700;800&family=DM+Serif+Display&family=EB+Garamond:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&family=Forum&family=Gloock&family=Great+Vibes&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Serif:wght@400;500;600;700&family=Instrument+Sans:wght@400;500;600;700;800&family=Josefin+Sans:wght@400;500;600;700&family=Kalam:wght@400;700&family=Libre+Baskerville:wght@400;700&family=Libre+Bodoni:wght@400;500;600;700&family=Lora:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=Marcellus&family=Merriweather:wght@400;700;900&family=Montserrat:wght@400;500;600;700;800&family=Old+Standard+TT:wght@400;700&family=Outfit:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Parisienne&family=Petit+Formal+Script&family=Philosopher:wght@400;700&family=Playfair+Display:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&family=Prata&family=PT+Serif:wght@400;700&family=Quattrocento:wght@400;700&family=Raleway:wght@400;500;600;700;800&family=Roboto+Slab:wght@400;500;600;700;800&family=Sacramento&family=Satisfy&family=Source+Serif+4:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Spectral:wght@400;500;600;700;800&family=Tangerine:wght@400;700&family=Tenor+Sans&family=Unna:wght@400;700&family=Vollkorn:wght@400;500;600;700;800&family=Yeseva+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Alegreya+Sans:wght@400;500;700;800&family=Almendra:wght@400;700&family=Arima:wght@400;500;600;700&family=Arizonia&family=Assistant:wght@400;500;600;700;800&family=Bree+Serif&family=Cabin:wght@400;500;600;700&family=Chivo:wght@400;500;600;700;800&family=Domine:wght@400;500;600;700&family=Eczar:wght@400;500;600;700;800&family=El+Messiri:wght@400;500;600;700&family=Elsie:wght@400;900&family=Inconsolata:wght@400;500;600;700&family=Jost:wght@400;500;600;700;800&family=Karla:wght@400;500;600;700;800&family=Libre+Franklin:wght@400;500;600;700;800&family=Mulish:wght@400;500;600;700;800&family=Nunito+Sans:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700;800&family=Orbitron:wght@400;500;600;700;800&family=Oswald:wght@400;500;600;700&family=Pacifico&family=PT+Sans:wght@400;700&family=Quattrocento+Sans:wght@400;700&family=Quicksand:wght@400;500;600;700&family=Roboto:wght@400;500;700;900&family=Roboto+Condensed:wght@400;500;600;700&family=Rokkitt:wght@400;500;600;700;800&family=Rosarivo:ital@0;1&family=Sanchez:ital@0;1&family=Source+Sans+3:wght@400;500;600;700;800&family=Ubuntu:wght@400;500;700&family=Work+Sans:wght@400;500;600;700;800&family=Ysabeau:wght@400;500;600;700;800&family=Zilla+Slab:wght@400;500;600;700&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -66,7 +70,14 @@
   }
   body {
     @apply bg-background text-foreground;
-    font-family: 'Inter', system-ui, sans-serif;
+    font-family: 'Manrope', 'IBM Plex Sans', system-ui, sans-serif;
+    font-feature-settings: "ss01", "cv05", "cv08";
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: 'Space Grotesk', 'Manrope', system-ui, sans-serif;
   }
 }
 
@@ -111,4 +122,154 @@
 * {
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 255, 255, 0.3) rgba(255, 255, 255, 0.1);
+}
+
+.studio-background {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 16% 10%, rgba(86, 97, 190, 0.2), transparent 24rem),
+    radial-gradient(circle at 84% 18%, rgba(20, 142, 128, 0.13), transparent 23rem),
+    radial-gradient(circle at 58% 88%, rgba(166, 121, 56, 0.08), transparent 25rem),
+    linear-gradient(180deg, #070912 0%, #04060c 54%, #020308 100%);
+}
+
+.studio-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.055) 1px, transparent 1px);
+  background-size: 54px 54px;
+  mask-image: linear-gradient(to bottom, black, transparent 78%);
+  animation: grid-pan 28s linear infinite;
+}
+
+.studio-beam {
+  position: absolute;
+  width: 42rem;
+  height: 10rem;
+  border-radius: 999px;
+  filter: blur(34px);
+  opacity: 0.22;
+  transform-origin: center;
+  animation: studio-drift 18s ease-in-out infinite alternate;
+}
+
+.studio-beam-one {
+  left: -10rem;
+  top: 10rem;
+  background: #6f7cff;
+  transform: rotate(-18deg);
+}
+
+.studio-beam-two {
+  bottom: 5rem;
+  right: -14rem;
+  background: #21c7a8;
+  animation-delay: -7s;
+  transform: rotate(15deg);
+}
+
+.studio-scanline {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.045), transparent),
+    linear-gradient(90deg, transparent, rgba(122, 132, 255, 0.16), transparent);
+  height: 34%;
+  animation: studio-scan 11s cubic-bezier(.45, 0, .2, 1) infinite;
+  opacity: 0.32;
+}
+
+.studio-background::after {
+  content: "";
+  position: absolute;
+  inset: -20%;
+  background: conic-gradient(from 120deg at 50% 50%, transparent, rgba(255, 255, 255, 0.05), transparent 26%, rgba(111, 124, 255, 0.08), transparent 48%);
+  filter: blur(28px);
+  opacity: 0.35;
+  animation: ambient-turn 36s linear infinite;
+}
+
+.preview-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 28px 28px;
+  mask-image: radial-gradient(circle at center, black, transparent 72%);
+}
+
+.interactive-panel {
+  transform: translateY(0) scale(1);
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    background-color 180ms ease;
+  will-change: transform;
+}
+
+.interactive-panel:hover,
+.interactive-panel:focus-within {
+  transform: translateY(-4px) scale(1.008);
+  border-color: rgba(170, 178, 255, 0.34);
+  background-color: rgba(13, 17, 27, 0.96);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.075),
+    0 18px 44px rgba(0, 0, 0, 0.32),
+    0 0 0 1px rgba(111, 124, 255, 0.06);
+}
+
+.interactive-panel:focus-within {
+  border-color: rgba(170, 178, 255, 0.48);
+}
+
+@keyframes studio-drift {
+  from {
+    translate: 0 0;
+    scale: 1;
+  }
+  to {
+    translate: 4rem 2rem;
+    scale: 1.08;
+  }
+}
+
+@keyframes grid-pan {
+  from {
+    background-position: 0 0, 0 0;
+  }
+  to {
+    background-position: 54px 54px, 54px 54px;
+  }
+}
+
+@keyframes studio-scan {
+  from {
+    transform: translateY(-40%);
+  }
+  to {
+    transform: translateY(280%);
+  }
+}
+
+@keyframes ambient-turn {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .studio-beam,
+  .studio-scanline,
+  .studio-grid,
+  .studio-background::after,
+  .interactive-panel {
+    animation: none;
+    transition: none;
+  }
 }
